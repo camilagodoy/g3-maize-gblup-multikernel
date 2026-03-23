@@ -1,7 +1,7 @@
-# Dissecting genetic variance structure and evaluating genomic prediction models for single-cross hybrids derived from Stiff Stalk and Non-Stiff Stalk maize populations
+# Dissecting genetic variance structure and evaluating genomic prediction models for single-cross hybrids derived from Stiff Stalk and Non-Stiff Stalk maize heterotic groups
 
 **Godoy dos Santos, J.C., Edwards, J., Lee, E., Mikel, M.A., Fernandes, S.B., Hirsch, C., Lipka, A.E., & Bohn, M.O.**  
-(Submitted to G3: Genes | Genomes | Genetics, 2025)
+(Submitted to G3: Genes | Genomes | Genetics, 2026)
 
 ---
 
@@ -51,6 +51,6 @@ Phenotypic and genotypic data were obtained from the **Genomes to Fields (G2F)**
 ---
 Any questions about the analyses, please, contact me!
 
-Jenifer Camila
+Jenifer Camila Godoy
 
 Email: jcg92@illinois.edu
