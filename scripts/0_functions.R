@@ -2,6 +2,109 @@
         #    GBLUP-based multi-kernel models    #   
         #               Functions               #
         #########################################
+
+        #--------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+        # Function to transform the data from tassel to numeric format:
+
+        #-----------------------------------------------------#
+        # Genotype coding:                                    #
+        # Homozygous major allele = 1                         #
+        # Homozygous minor allele = 0                         #
+        # Heterozygous = 0.5                                  #
+        #                                                     #
+        # Note:                                               #
+        # After coding, the matrix is multiplied by 2         #
+        # to obtain the scale {0, 1, 2}, consistent with      #
+        # the parameterization used in the AGHmatrix package. #
+        #-----------------------------------------------------#
+        
+        convert_genotype_matrix = function(mat) {
+          
+              iupac_hetero = list(
+              R = c("A", "G"), Y = c("C", "T"), S = c("C", "G"),
+              W = c("A", "T"), K = c("G", "T"), M = c("A", "C"))
+          
+              apply(mat, 2, function(col) {
+                          
+                         expanded = unlist(sapply(col, function(x) {
+                            
+                                     if (x %in% names(iupac_hetero)) {
+                                     return(iupac_hetero[[x]])
+                                       
+                                     } else if (x %in% c("A", "C", "G", "T")) {
+                                     return(c(x, x))
+                                     
+                                     } else {
+                                       
+                                     return(NULL)
+                                       
+                                     }
+                            
+                         }))
+            
+              freqs = sort(table(expanded), decreasing = TRUE)
+              alleles = names(freqs)
+
+              # Case 1:
+              if (length(alleles) == 1) {
+                          
+                         major = alleles[1]
+                         
+                                    return(sapply(col, function(x) {
+                            
+                                    if (is.na(x) || x == "N") return(NA)
+                                      
+                                    if (x == major) return(1)
+                                      
+                                    if (x %in% names(iupac_hetero)) {
+                                      
+                                    pair = iupac_hetero[[x]]
+                                    if (all(pair == major)) return(1) 
+                                    
+                                    }
+                                      
+                                    return(NA)  
+                         }))
+                        
+              }
+            
+              # Case 2:
+              if (length(alleles) >= 2) {
+                          
+                            major = alleles[1]
+                            minor = alleles[2]
+                                  return(sapply(col, function(x) {
+                                    
+                                  if (is.na(x) || x == "N") {
+                                  return(NA)
+                                    
+                                  } else if (x %in% c("A", "C", "G", "T")) {
+                                  if (x == major) return(1)
+                                  else if (x == minor) return(0)
+                                  else return(NA)
+                            
+                                  } else if (x %in% names(iupac_hetero)) {
+                                  pair = iupac_hetero[[x]]
+                                  if (all(sort(pair) == sort(c(major, minor)))) {
+                                  return(0.5)
+                                  } else {
+                                  return(NA)
+                                  }
+                                  
+                                  } else {
+                                  return(NA)
+                                  }
+                                    
+                         }))
+                          
+              }
+            
+              # Case 3:
+              return(rep(NA, length(col)))
+              
+              })
+        
+        }
       
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------------#
         # Function to build the sca matrices:
@@ -324,7 +427,4 @@
         }
         
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-        
-        
-
         
